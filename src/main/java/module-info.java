@@ -1,8 +1,9 @@
-module com.example.examgeneratorfx {
+module java {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
 
-    opens model to javafx.fxml;
+    opens Application to javafx.graphics,javafx.fxml;
     exports model;
 }

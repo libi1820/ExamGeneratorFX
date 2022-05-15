@@ -1,5 +1,9 @@
 package model;
 
+import Controller.SystemController;
+import Listeners.SystemEventListener;
+import Listeners.SystemUIEventListener;
+
 import java.io.*;
 import java.util.*;
 
@@ -11,12 +15,24 @@ public class Manager implements Serializable {
 
     private List<Question> questions;
     private Exam currentExam;
+    private List<SystemEventListener> listeners;
 
     public Manager() {
         questions = new ArrayList();
+        listeners = new ArrayList();
 
     }
 
+    public List<Question> getQuestions() {
+        fireDisplayQuestions(questions);
+        return questions;
+    }
+
+    private void fireDisplayQuestions(List<Question> questions) {
+        for(SystemEventListener l : listeners){
+            l.displayQuestionInView(this.toString());
+        }
+    }
 
     public int getSize() {
         return questions.size();
@@ -44,9 +60,11 @@ public class Manager implements Serializable {
         return questions.get(index);
     }
 
-    public boolean isMultiChoiceQuestion(int serial) {
+ public boolean isMultiChoiceQuestion(int serial) {
         return getQuestionById(serial) instanceof MultiChoiceQuestion;
     }
+
+
 
 
     /**
@@ -381,4 +399,7 @@ public void cloneExam() throws CloneNotSupportedException {
 }
 
 
+    public void registerListeners(SystemEventListener listener) {
+       this.listeners.add(listener);
+    }
 }
